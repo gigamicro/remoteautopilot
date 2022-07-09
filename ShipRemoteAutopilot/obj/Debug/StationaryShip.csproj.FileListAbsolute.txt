@@ -1,0 +1,10 @@
+C:\Users\sherw\AppData\Roaming\OuterWildsModManager\OWML\Mods\sherw.StationaryShip\default-config.json
+C:\Users\sherw\AppData\Roaming\OuterWildsModManager\OWML\Mods\sherw.StationaryShip\manifest.json
+C:\Users\sherw\AppData\Roaming\OuterWildsModManager\OWML\Mods\sherw.StationaryShip\StationaryShip.dll
+C:\Users\sherw\AppData\Roaming\OuterWildsModManager\OWML\Mods\sherw.StationaryShip\StationaryShip.pdb
+C:\Users\sherw\source\repos\StationaryShip\StationaryShip\obj\Debug\StationaryShip.csprojAssemblyReference.cache
+C:\Users\sherw\source\repos\StationaryShip\StationaryShip\obj\Debug\StationaryShip.AssemblyInfoInputs.cache
+C:\Users\sherw\source\repos\StationaryShip\StationaryShip\obj\Debug\StationaryShip.AssemblyInfo.cs
+C:\Users\sherw\source\repos\StationaryShip\StationaryShip\obj\Debug\StationaryShip.csproj.CoreCompileInputs.cache
+C:\Users\sherw\source\repos\StationaryShip\StationaryShip\obj\Debug\StationaryShip.dll
+C:\Users\sherw\source\repos\StationaryShip\StationaryShip\obj\Debug\StationaryShip.pdb

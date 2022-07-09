@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "Y4fr+YcvvlQbYzvzWDlXu43HYPPQz7Tp5PJ3/hjPvx4ELhdPRlck7qlqZRoh2WLGdRR/E50A5R778aqwO9mePg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\sherw\\source\\repos\\StationaryShip\\StationaryShip\\ShipRemoteAutopilot.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\sherw\\.nuget\\packages\\json.net.unity3d\\9.0.1\\json.net.unity3d.9.0.1.nupkg.sha512",
+    "C:\\Users\\sherw\\.nuget\\packages\\lib.harmony\\2.2.1\\lib.harmony.2.2.1.nupkg.sha512",
+    "C:\\Users\\sherw\\.nuget\\packages\\outerwildsgamelibs\\1.1.12.168\\outerwildsgamelibs.1.1.12.168.nupkg.sha512",
+    "C:\\Users\\sherw\\.nuget\\packages\\owml\\2.3.2\\owml.2.3.2.nupkg.sha512"
+  ],
+  "logs": []
+}

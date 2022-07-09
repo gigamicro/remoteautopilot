@@ -1,0 +1,55 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\sherw\\source\\repos\\StationaryShip\\StationaryShip\\StationaryShip.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\sherw\\source\\repos\\StationaryShip\\StationaryShip\\StationaryShip.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\sherw\\source\\repos\\StationaryShip\\StationaryShip\\StationaryShip.csproj",
+        "projectName": "StationaryShip",
+        "projectPath": "C:\\Users\\sherw\\source\\repos\\StationaryShip\\StationaryShip\\StationaryShip.csproj",
+        "packagesPath": "C:\\Users\\sherw\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\sherw\\source\\repos\\StationaryShip\\StationaryShip\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\sherw\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net48"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net48": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net48": {
+          "dependencies": {
+            "OWML": {
+              "target": "Package",
+              "version": "[2.3.2, )"
+            },
+            "OuterWildsGameLibs": {
+              "target": "Package",
+              "version": "[1.1.12.168, )"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files (x86)\\dotnet\\sdk\\3.1.300\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

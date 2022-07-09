@@ -1,0 +1,10 @@
+C:\Users\sherw\AppData\Roaming\OuterWildsModManager\OWML\Mods\Titch.ShipRemoteAutopilot\default-config.json
+C:\Users\sherw\AppData\Roaming\OuterWildsModManager\OWML\Mods\Titch.ShipRemoteAutopilot\manifest.json
+C:\Users\sherw\AppData\Roaming\OuterWildsModManager\OWML\Mods\Titch.ShipRemoteAutopilot\ShipRemoteAutopilot.dll
+C:\Users\sherw\AppData\Roaming\OuterWildsModManager\OWML\Mods\Titch.ShipRemoteAutopilot\ShipRemoteAutopilot.pdb
+C:\Users\sherw\source\repos\StationaryShip\StationaryShip\obj\Debug\ShipRemoteAutopilot.AssemblyInfoInputs.cache
+C:\Users\sherw\source\repos\StationaryShip\StationaryShip\obj\Debug\ShipRemoteAutopilot.AssemblyInfo.cs
+C:\Users\sherw\source\repos\StationaryShip\StationaryShip\obj\Debug\ShipRemoteAutopilot.dll
+C:\Users\sherw\source\repos\StationaryShip\StationaryShip\obj\Debug\ShipRemoteAutopilot.pdb
+C:\Users\sherw\source\repos\StationaryShip\StationaryShip\obj\Debug\ShipRemoteAutopilot.csprojAssemblyReference.cache
+C:\Users\sherw\source\repos\StationaryShip\StationaryShip\obj\Debug\ShipRemoteAutopilot.csproj.CoreCompileInputs.cache
