@@ -1,4 +1,4 @@
-﻿using OWML.Common;
+using OWML.Common;
 using OWML.ModHelper;
 using OWML.Utils;
 using System;
@@ -56,7 +56,7 @@ namespace ShipRemoteAutopilot
             Locator.GetShipBody().GetComponent<AlignShipWithReferenceFrame>().OnEnterLandingMode(AligningReferenceFrame);
             StartCoroutine(ShipAlignmentTiming());
         }
-        
+
         //Function to activate autopilot to location
         public void TravelToLocation()
         {
@@ -135,7 +135,7 @@ namespace ShipRemoteAutopilot
                     isSunAvoided = false;
                 }
             }
-            
+
 
             //Select the Planet from the Planet Index
             if (Keyboard.current.numpad1Key.wasPressedThisFrame)
@@ -173,7 +173,7 @@ namespace ShipRemoteAutopilot
                 planetaryBody = Locator.GetAstroObject(AstroObject.Name.CaveTwin);
                 ModHelper.Console.WriteLine("Changed Remote Autopilot location to the Sand Twin");
             }
-            
+
             if (Keyboard.current.numpad7Key.wasPressedThisFrame)
             {
                 planetaryBody = Locator.GetAstroObject(AstroObject.Name.Comet);
