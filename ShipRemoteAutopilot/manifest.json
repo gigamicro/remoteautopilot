@@ -1,8 +1,8 @@
 {
     "filename": "ShipRemoteAutopilot.dll",
-    "author": "Titch",
+    "author": "gigamicro",
     "name": "Ship Remote Autopilot",
-    "uniqueName": "Titch.ShipRemoteAutopilot",
-    "version": "0.1.0",
+    "uniqueName": "gigamicro.ShipRemoteAutopilot",
+    "version": "0.0.0",
     "owmlVersion": "2.3.2"
 }
