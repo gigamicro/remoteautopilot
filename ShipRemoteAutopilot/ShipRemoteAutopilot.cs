@@ -147,7 +147,7 @@ namespace ShipRemoteAutopilot
             if (Keyboard.current.numpad2Key.wasPressedThisFrame)
             {
                 planetaryBody = Locator.GetAstroObject(AstroObject.Name.GiantsDeep);
-                ModHelper.Console.WriteLine("Changed Remote Autopilot location to Giants Deep");
+                ModHelper.Console.WriteLine("Changed Remote Autopilot location to Giant's Deep");
             }
 
             if (Keyboard.current.numpad3Key.wasPressedThisFrame)
@@ -165,13 +165,13 @@ namespace ShipRemoteAutopilot
             if (Keyboard.current.numpad5Key.wasPressedThisFrame)
             {
                 planetaryBody = Locator.GetAstroObject(AstroObject.Name.TowerTwin);
-                ModHelper.Console.WriteLine("Changed Remote Autopilot location to the Sand Twin");
+                ModHelper.Console.WriteLine("Changed Remote Autopilot location to AshTwin");
             }
 
             if (Keyboard.current.numpad6Key.wasPressedThisFrame)
             {
                 planetaryBody = Locator.GetAstroObject(AstroObject.Name.CaveTwin);
-                ModHelper.Console.WriteLine("Changed Remote Autopilot location to the Sand Twin");
+                ModHelper.Console.WriteLine("Changed Remote Autopilot location to EmberTwin");
             }
 
             if (Keyboard.current.numpad7Key.wasPressedThisFrame)
