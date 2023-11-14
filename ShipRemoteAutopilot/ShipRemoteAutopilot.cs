@@ -12,63 +12,28 @@ namespace ShipRemoteAutopilot
 {
     public class ShipRemoteAutopilot : ModBehaviour
     {
-        ReferenceFrameTracker lockTracker = null;
-        OWRigidbody shipBody = null;
-        // enum AutonomyState
-        // {
-        //     Inactive,
-        //     // Leaving,
-        //     // AutoBegin,
-        //     Auto,
-        //     // AutoEnd,
-        //     // Aligning,
-        //     // Landing
-        // }
-        // private AutonomyState _state = AutonomyState.Inactive;
-        // AutonomyState state {
-        //     get { return _state; }
-        //     set {
-        //         if (_state==AutonomyState.Landing) shipBody.GetComponent<AlignShipWithReferenceFrame>().OnExitLandingMode();
-        //         if (_state==AutonomyState.Auto) shipBody.EnableCollisionDetection();
-        //         _state=value;
-        //         ModHelper.Console.WriteLine("state=" + _state);
-        //     }
-        // }
-        // AutonomyState state = AutonomyState.Inactive;
+        private ReferenceFrameTracker lockTracker = null;
+        private OWRigidbody shipBody = null;
         bool active = false;
-
-        // IEnumerator Timing(int seconds, AutonomyState toset)
-        // {
-        //     ModHelper.Console.WriteLine("state=" + toset + " in " + seconds + "s");
-        //     WaitForSeconds wait = new WaitForSeconds(seconds);
-        //     yield return wait;
-        //     state=toset;
-        // }
 
         public void OnFail()
         {
-            // ModHelper.Console.WriteLine("OnFail");
             if (active)
                 shipBody.GetComponent<Autopilot>().StartMatchVelocity(lockTracker.GetReferenceFrame());
         }
         public void OnInit()
         {
-            // ModHelper.Console.WriteLine("OnInit");
             if (active && Vector3.Distance(shipBody.transform.position, Locator.GetPlayerTransform().position) > 10)
                 shipBody.DisableCollisionDetection();
         }
         public void OnRetro()
         {
-            // ModHelper.Console.WriteLine("OnRetro");
             if (active)
                 shipBody.GetComponent<AlignShipWithReferenceFrame>().OnEnterLandingMode(lockTracker.GetReferenceFrame());
-                // state=AutonomyState.Aligning;
         }
         public void OnArrive(float arrivalError)
         {
-            // ModHelper.Console.WriteLine("OnArrive");
             if (active) {
-                // state=AutonomyState.AutoEnd;
                 shipBody.EnableCollisionDetection();
                 shipBody.GetComponent<AlignShipWithReferenceFrame>().OnExitLandingMode();
                 active = false;
@@ -76,10 +41,6 @@ namespace ShipRemoteAutopilot
         }
         public void OnAbort()
         {
-            // ModHelper.Console.WriteLine("OnAbort");
-            // state=AutonomyState.Inactive
-            // shipBody.EnableCollisionDetection();
-            // active=false;
             OnArrive(1/0f);
         }
 
@@ -87,7 +48,6 @@ namespace ShipRemoteAutopilot
         {
             if (shipBody==null) {
                 shipBody = Locator.GetShipBody();
-                // state = AutonomyState.Inactive;
                 active=false;
                 if (shipBody!=null) {
                     Autopilot ap = shipBody.GetComponent<Autopilot>();
@@ -100,8 +60,6 @@ namespace ShipRemoteAutopilot
             }
             if (lockTracker==null && Locator.GetPlayerTransform()!=null)
                 lockTracker = Locator.GetPlayerTransform().GetComponent<ReferenceFrameTracker>();
-            // if (shipBody==null || lockTracker==null) return;
-            // if (lockTracker==null) return;
 
             if (Keyboard.current.numpadEnterKey.wasPressedThisFrame)
             {
@@ -111,63 +69,35 @@ namespace ShipRemoteAutopilot
                     StartCoroutine(Timing(4, AutonomyState.AutoBegin));
                 }
                 else { state=AutonomyState.AutoBegin; }*/
-                // state=AutonomyState.AutoBegin;
-                // state=AutonomyState.Auto;
                 active=true;
                 shipBody.GetComponent<Autopilot>().FlyToDestination(lockTracker.GetReferenceFrame());
             }
 
-            // if (state==AutonomyState.Leaving)
-            // {
-            //     shipBody.GetComponent<ThrusterModel>().AddTranslationalInput(Vector3.up);
-            // }
-            // if (activeBegin)
-            // {
-            //     // ModHelper.Console.WriteLine("AutoBegin");
-            //     state=AutonomyState.Auto;
-            //     // shipBody.GetComponent<Autopilot>().FlyToDestination(lockTracker.GetReferenceFrame());
-            //     // isSunAvoided = false;
-            //     if (Vector3.Distance(shipBody.transform.position, Locator.GetPlayerTransform().position) > 10)
-            //     shipBody.DisableCollisionDetection();
-            // }
-            /*if (active)
+            /*
+            if (active)
             {
                 shipBody.DisableCollisionDetection();
-                bool collide = true;
                 RaycastHit hit;
                 if (Physics.Raycast(shipBody.transform.position, (lockTracker.transform.position - shipBody.transform.position).normalized, out hit, 10))
                 {
-                    if (Vector3.Distance(hit.transform.position, lockTracker.transform.position) > 800)//350) // (hit.transform.name == "Sun_Body")
-                        {ModHelper.Console.WriteLine("hit:"+hit.transform.name);
-                        collide = false;
-                            Vector3 vec = Vector3.Cross(
-                                hit.transform.position-shipBody.transform.position,
-                                hit.transform.position-lockTracker.transform.position)
-                            ;ModHelper.Console.WriteLine("vec:"+vec);
-                        shipBody.GetComponent<ThrusterModel>().AddTranslationalInput(
+                    if (Vector3.Distance(hit.transform.position, lockTracker.transform.position) > 800)
+                    {
+                        ModHelper.Console.WriteLine("hit:"+hit.transform.name);
+                        Vector3 vec = Vector3.Cross(
+                            hit.transform.position-shipBody.transform.position,
+                            hit.transform.position-lockTracker.transform.position);
+                        ModHelper.Console.WriteLine("vec:"+vec);
+                        ModHelper.Console.WriteLine("fin:"+// shipBody.GetComponent<ThrusterModel>().AddTranslationalInput(
                             shipBody.transform.InverseTransformPoint(vec
                             +shipBody.transform.position).normalized
-                        );}
+                        );
+                    }
                 }
-                if (collide)
                 shipBody.EnableCollisionDetection();
-            }*/
-            // if (activeEnd)
-            // {
-            //     shipBody.EnableCollisionDetection();
-            //     // ModHelper.Console.WriteLine("AutoEnd");
-            //     // state=AutonomyState.Aligning;
-            //     // shipBody.GetComponent<AlignShipWithReferenceFrame>().OnEnterLandingMode(lockTracker.GetReferenceFrame());
-            //     // StartCoroutine(Timing(2, AutonomyState.Landing));
-            //     // StartCoroutine(Timing(25, AutonomyState.Inactive, AutonomyState.Landing));
-            //     // StartCoroutine(Timing(2, AutonomyState.Inactive));
-            // }
-            // if (state==AutonomyState.Landing && shipBody.GetComponent<LandingPadManager>()._isLanded)
-            //     StartCoroutine(Timing(2, AutonomyState.Inactive));
+            } //*/
 
-            // Planet Selection
-            if (Keyboard.current.numpadPeriodKey.wasPressedThisFrame)
-                lockTracker.TargetReferenceFrame(Locator.GetPlayerTransform().GetComponent<OWRigidbody>().GetReferenceFrame());
+            // if (Keyboard.current.numpadPeriodKey.wasPressedThisFrame)
+            //     lockTracker.TargetReferenceFrame(Locator.GetPlayerTransform().GetComponent<OWRigidbody>().GetReferenceFrame());
             if (Keyboard.current.numpad0Key.wasPressedThisFrame)
                 lockTracker.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .Sun            ).GetOWRigidbody().GetReferenceFrame());
             if (Keyboard.current.numpad1Key.wasPressedThisFrame)
