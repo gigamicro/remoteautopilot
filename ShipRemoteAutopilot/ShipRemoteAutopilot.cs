@@ -47,32 +47,40 @@ namespace ShipRemoteAutopilot
 
         public void OnFail()
         {
+            // ModHelper.Console.WriteLine("OnFail");
             if (active)
                 shipBody.GetComponent<Autopilot>().StartMatchVelocity(lockTracker.GetReferenceFrame());
         }
         public void OnInit()
         {
+            // ModHelper.Console.WriteLine("OnInit");
             if (active && Vector3.Distance(shipBody.transform.position, Locator.GetPlayerTransform().position) > 10)
                 shipBody.DisableCollisionDetection();
         }
         public void OnRetro()
         {
+            // ModHelper.Console.WriteLine("OnRetro");
             if (active)
                 shipBody.GetComponent<AlignShipWithReferenceFrame>().OnEnterLandingMode(lockTracker.GetReferenceFrame());
                 // state=AutonomyState.Aligning;
         }
         public void OnArrive(float arrivalError)
         {
-            if (active)
-                shipBody.EnableCollisionDetection();
+            // ModHelper.Console.WriteLine("OnArrive");
+            if (active) {
                 // state=AutonomyState.AutoEnd;
-            active = false;
+                shipBody.EnableCollisionDetection();
+                shipBody.GetComponent<AlignShipWithReferenceFrame>().OnExitLandingMode();
+                active = false;
+            }
         }
         public void OnAbort()
         {
+            // ModHelper.Console.WriteLine("OnAbort");
             // state=AutonomyState.Inactive
-            shipBody.EnableCollisionDetection();
-            active=false;
+            // shipBody.EnableCollisionDetection();
+            // active=false;
+            OnArrive(1/0f);
         }
 
         private void Update()
@@ -93,7 +101,7 @@ namespace ShipRemoteAutopilot
             if (lockTracker==null && Locator.GetPlayerTransform()!=null)
                 lockTracker = Locator.GetPlayerTransform().GetComponent<ReferenceFrameTracker>();
             // if (shipBody==null || lockTracker==null) return;
-            if (lockTracker==null) return;
+            // if (lockTracker==null) return;
 
             if (Keyboard.current.numpadEnterKey.wasPressedThisFrame)
             {
