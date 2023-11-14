@@ -8,9 +8,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 // rember ilspycmd "$(locate '*OuterWilds_Data/Managed/Assembly-CSharp.dll')" | less
 
-namespace ShipRemoteAutopilot
+namespace RemoteAutopilot
 {
-    public class ShipRemoteAutopilot : ModBehaviour
+    public class RemoteAutopilot : ModBehaviour
     {
         private ReferenceFrameTracker lockTracker = null;
         private OWRigidbody shipBody = null;

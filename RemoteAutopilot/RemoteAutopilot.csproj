@@ -26,6 +26,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ShipRemoteAutopilot.csproj.user" />
+    <Content Include="RemoteAutopilot.csproj.user" />
   </ItemGroup>
 </Project>
