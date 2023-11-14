@@ -1,0 +1,8 @@
+{
+    "filename": "RemoteAutopilot.dll",
+    "author": "gigamicro",
+    "name": "Remote Autopilot",
+    "uniqueName": "gigamicro.RemoteAutopilot",
+    "version": "0.0.8",
+    "owmlVersion": "2.3.2"
+}
