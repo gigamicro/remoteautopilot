@@ -6,185 +6,178 @@ using System.Collections;
 using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.InputSystem;
+// rember ilspycmd "$(locate '*OuterWilds_Data/Managed/Assembly-CSharp.dll')" | less
 
 namespace ShipRemoteAutopilot
 {
     public class ShipRemoteAutopilot : ModBehaviour
     {
-        bool CounterActive = false;
-        bool isTimerDone = false;
-        bool isShipAligned = false;
-        bool isSunAvoided = true;
-        RaycastHit hit;
-        AstroObject planetaryBody = Locator.GetAstroObject(AstroObject.Name.GiantsDeep);
+        ReferenceFrameTracker lockTracker = null;
+        OWRigidbody shipBody = null;
+        // enum AutonomyState
+        // {
+        //     Inactive,
+        //     // Leaving,
+        //     // AutoBegin,
+        //     Auto,
+        //     // AutoEnd,
+        //     // Aligning,
+        //     // Landing
+        // }
+        // private AutonomyState _state = AutonomyState.Inactive;
+        // AutonomyState state {
+        //     get { return _state; }
+        //     set {
+        //         if (_state==AutonomyState.Landing) shipBody.GetComponent<AlignShipWithReferenceFrame>().OnExitLandingMode();
+        //         if (_state==AutonomyState.Auto) shipBody.EnableCollisionDetection();
+        //         _state=value;
+        //         ModHelper.Console.WriteLine("state=" + _state);
+        //     }
+        // }
+        // AutonomyState state = AutonomyState.Inactive;
+        bool active = false;
 
-        //10 Seconds countdown for moving ship to air
-        IEnumerator ThrusterTiming()
+        // IEnumerator Timing(int seconds, AutonomyState toset)
+        // {
+        //     ModHelper.Console.WriteLine("state=" + toset + " in " + seconds + "s");
+        //     WaitForSeconds wait = new WaitForSeconds(seconds);
+        //     yield return wait;
+        //     state=toset;
+        // }
+
+        public void OnFail()
         {
-            WaitForSeconds wait = new WaitForSeconds(10);
-            yield return wait;
-
-            isTimerDone = true;
+            if (active)
+                shipBody.GetComponent<Autopilot>().StartMatchVelocity(lockTracker.GetReferenceFrame());
         }
-        //2 Second countdown for aligning the ship to the surface of the planet for landing
-        IEnumerator ShipAlignmentTiming()
+        public void OnInit()
         {
-            WaitForSeconds wait = new WaitForSeconds(2);
-            yield return wait;
-
-            isShipAligned = true;
+            if (active && Vector3.Distance(shipBody.transform.position, Locator.GetPlayerTransform().position) > 10)
+                shipBody.DisableCollisionDetection();
         }
-
-
-        //Links the Align and Land Ship functions to the Autopilot Arrival flag
-        private void Start()
+        public void OnRetro()
         {
-            LoadManager.OnCompleteSceneLoad += (scene, loadScene) =>
-            {
-                if (loadScene != OWScene.SolarSystem) return;
-                var shipBody = FindObjectOfType<ShipBody>();
-
-                shipBody.GetComponent<Autopilot>().OnArriveAtDestination += AlignShip;
-            };
+            if (active)
+                shipBody.GetComponent<AlignShipWithReferenceFrame>().OnEnterLandingMode(lockTracker.GetReferenceFrame());
+                // state=AutonomyState.Aligning;
         }
-
-        //Function to Align the ship to face the floor of the planet
-        public void AlignShip(float arrivalError)
+        public void OnArrive(float arrivalError)
         {
-            var ShipBody = FindObjectOfType<ShipBody>();
-            var AligningReferenceFrame = planetaryBody.GetOWRigidbody().GetReferenceFrame();
-            Locator.GetShipBody().GetComponent<AlignShipWithReferenceFrame>().OnEnterLandingMode(AligningReferenceFrame);
-            StartCoroutine(ShipAlignmentTiming());
+            if (active)
+                shipBody.EnableCollisionDetection();
+                // state=AutonomyState.AutoEnd;
+            active = false;
         }
-
-        //Function to activate autopilot to location
-        public void TravelToLocation()
+        public void OnAbort()
         {
-            //Sets the timer to be done
-            isTimerDone = false;
-
-            var ShipBody = Locator.GetShipBody();
-            var ShipReferenceFrame = planetaryBody.GetOWRigidbody().GetReferenceFrame();
-            ModHelper.Console.WriteLine("Ship Reference Frame Name : " + ShipReferenceFrame);
-            Locator.GetPlayerTransform().GetComponent<ReferenceFrameTracker>().TargetReferenceFrame(ShipReferenceFrame);
-            Locator.GetShipBody().GetComponent<Autopilot>().FlyToDestination(ShipReferenceFrame);
+            // state=AutonomyState.Inactive
+            shipBody.EnableCollisionDetection();
+            active=false;
         }
-
 
         private void Update()
         {
-            var ShipBody = Locator.GetShipBody();
-
-            //Controls upward thrust when counter is counting
-            if (CounterActive)
-            {
-                Locator.GetShipBody().GetComponent<ThrusterModel>().AddTranslationalInput(Vector3.up);
-            }
-
-            //When the ship is aligned 
-            if (isShipAligned)
-            {
-                Locator.GetShipBody().GetComponent<AlignShipWithReferenceFrame>().OnExitLandingMode();
-                isShipAligned = false;
-            }
-
-            //When the timer is done, activate the travelling from orbit
-            if (isTimerDone)
-            {
-                CounterActive = false;
-                isTimerDone = false;
-                isSunAvoided = false;
-            }
-
-            //Only runs if it has not been checked that the sun is in the way
-            if (!isSunAvoided)
-            {
-                Locator.GetShipBody().DisableCollisionDetection();
-                var direction = planetaryBody.transform.position - ShipBody.transform.position;
-                if (Physics.Raycast(ShipBody.transform.position, (planetaryBody.transform.position - ShipBody.transform.position).normalized , out hit))
-                {
-                    if (hit.transform.name == "Sun_Body")
-                    {
-                        Locator.GetShipBody().GetComponent<ThrusterModel>().AddTranslationalInput(Vector3.Cross(direction, Vector3.up));
-                        isSunAvoided = false;
-                    }else
-                    {
-                        isSunAvoided = true;
-                        TravelToLocation();
-                    }
-                }else
-                {
-                    TravelToLocation();
+            if (shipBody==null) {
+                shipBody = Locator.GetShipBody();
+                // state = AutonomyState.Inactive;
+                active=false;
+                if (shipBody!=null) {
+                    Autopilot ap = shipBody.GetComponent<Autopilot>();
+                    ap.OnAlreadyAtDestination   += OnFail;
+                    ap.OnInitFlyToDestination   += OnInit;
+                    ap.OnFireRetroRockets       += OnRetro;
+                    ap.OnArriveAtDestination    += OnArrive;
+                    ap.OnAbortAutopilot         += OnAbort;
                 }
             }
+            if (lockTracker==null && Locator.GetPlayerTransform()!=null)
+                lockTracker = Locator.GetPlayerTransform().GetComponent<ReferenceFrameTracker>();
+            // if (shipBody==null || lockTracker==null) return;
+            if (lockTracker==null) return;
 
-            if (isSunAvoided)
-            {
-                Locator.GetShipBody().EnableCollisionDetection();
-            }
-
-            //Go to Location
             if (Keyboard.current.numpadEnterKey.wasPressedThisFrame)
             {
-                if (ShipBody.GetComponent<LandingPadManager>()._isLanded == true)
+                /*if (shipBody.GetComponent<LandingPadManager>()._isLanded == true)
                 {
-                    CounterActive = true;
-                    StartCoroutine(ThrusterTiming());
-                }else
-                {
-                    isSunAvoided = false;
+                    state=AutonomyState.Leaving;
+                    StartCoroutine(Timing(4, AutonomyState.AutoBegin));
                 }
+                else { state=AutonomyState.AutoBegin; }*/
+                // state=AutonomyState.AutoBegin;
+                // state=AutonomyState.Auto;
+                active=true;
+                shipBody.GetComponent<Autopilot>().FlyToDestination(lockTracker.GetReferenceFrame());
             }
 
+            // if (state==AutonomyState.Leaving)
+            // {
+            //     shipBody.GetComponent<ThrusterModel>().AddTranslationalInput(Vector3.up);
+            // }
+            // if (activeBegin)
+            // {
+            //     // ModHelper.Console.WriteLine("AutoBegin");
+            //     state=AutonomyState.Auto;
+            //     // shipBody.GetComponent<Autopilot>().FlyToDestination(lockTracker.GetReferenceFrame());
+            //     // isSunAvoided = false;
+            //     if (Vector3.Distance(shipBody.transform.position, Locator.GetPlayerTransform().position) > 10)
+            //     shipBody.DisableCollisionDetection();
+            // }
+            /*if (active)
+            {
+                shipBody.DisableCollisionDetection();
+                bool collide = true;
+                RaycastHit hit;
+                if (Physics.Raycast(shipBody.transform.position, (lockTracker.transform.position - shipBody.transform.position).normalized, out hit, 10))
+                {
+                    if (Vector3.Distance(hit.transform.position, lockTracker.transform.position) > 800)//350) // (hit.transform.name == "Sun_Body")
+                        {ModHelper.Console.WriteLine("hit:"+hit.transform.name);
+                        collide = false;
+                            Vector3 vec = Vector3.Cross(
+                                hit.transform.position-shipBody.transform.position,
+                                hit.transform.position-lockTracker.transform.position)
+                            ;ModHelper.Console.WriteLine("vec:"+vec);
+                        shipBody.GetComponent<ThrusterModel>().AddTranslationalInput(
+                            shipBody.transform.InverseTransformPoint(vec
+                            +shipBody.transform.position).normalized
+                        );}
+                }
+                if (collide)
+                shipBody.EnableCollisionDetection();
+            }*/
+            // if (activeEnd)
+            // {
+            //     shipBody.EnableCollisionDetection();
+            //     // ModHelper.Console.WriteLine("AutoEnd");
+            //     // state=AutonomyState.Aligning;
+            //     // shipBody.GetComponent<AlignShipWithReferenceFrame>().OnEnterLandingMode(lockTracker.GetReferenceFrame());
+            //     // StartCoroutine(Timing(2, AutonomyState.Landing));
+            //     // StartCoroutine(Timing(25, AutonomyState.Inactive, AutonomyState.Landing));
+            //     // StartCoroutine(Timing(2, AutonomyState.Inactive));
+            // }
+            // if (state==AutonomyState.Landing && shipBody.GetComponent<LandingPadManager>()._isLanded)
+            //     StartCoroutine(Timing(2, AutonomyState.Inactive));
 
-            //Select the Planet from the Planet Index
+            // Planet Selection
+            if (Keyboard.current.numpadPeriodKey.wasPressedThisFrame)
+                lockTracker.TargetReferenceFrame(Locator.GetPlayerTransform().GetComponent<OWRigidbody>().GetReferenceFrame());
+            if (Keyboard.current.numpad0Key.wasPressedThisFrame)
+                lockTracker.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .Sun            ).GetOWRigidbody().GetReferenceFrame());
             if (Keyboard.current.numpad1Key.wasPressedThisFrame)
-            {
-                planetaryBody = Locator.GetAstroObject(AstroObject.Name.TimberHearth);
-                ModHelper.Console.WriteLine("Changed Remote Autopilot location to Timber Hearth");
-            }
-
+                lockTracker.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .TowerTwin      ).GetOWRigidbody().GetReferenceFrame());
             if (Keyboard.current.numpad2Key.wasPressedThisFrame)
-            {
-                planetaryBody = Locator.GetAstroObject(AstroObject.Name.GiantsDeep);
-                ModHelper.Console.WriteLine("Changed Remote Autopilot location to Giant's Deep");
-            }
-
+                lockTracker.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .CaveTwin       ).GetOWRigidbody().GetReferenceFrame());
             if (Keyboard.current.numpad3Key.wasPressedThisFrame)
-            {
-                planetaryBody = Locator.GetAstroObject(AstroObject.Name.BrittleHollow);
-                ModHelper.Console.WriteLine("Changed Remote Autopilot location to Brittle Hollow");
-            }
-
+                lockTracker.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .TimberHearth   ).GetOWRigidbody().GetReferenceFrame());
             if (Keyboard.current.numpad4Key.wasPressedThisFrame)
-            {
-                planetaryBody = Locator.GetAstroObject(AstroObject.Name.DarkBramble);
-                ModHelper.Console.WriteLine("Changed Remote Autopilot location to Dark Bramble");
-            }
-
+                lockTracker.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .BrittleHollow  ).GetOWRigidbody().GetReferenceFrame());
             if (Keyboard.current.numpad5Key.wasPressedThisFrame)
-            {
-                planetaryBody = Locator.GetAstroObject(AstroObject.Name.TowerTwin);
-                ModHelper.Console.WriteLine("Changed Remote Autopilot location to AshTwin");
-            }
-
+                lockTracker.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .GiantsDeep     ).GetOWRigidbody().GetReferenceFrame());
             if (Keyboard.current.numpad6Key.wasPressedThisFrame)
-            {
-                planetaryBody = Locator.GetAstroObject(AstroObject.Name.CaveTwin);
-                ModHelper.Console.WriteLine("Changed Remote Autopilot location to EmberTwin");
-            }
-
+                lockTracker.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .DarkBramble    ).GetOWRigidbody().GetReferenceFrame());
             if (Keyboard.current.numpad7Key.wasPressedThisFrame)
-            {
-                planetaryBody = Locator.GetAstroObject(AstroObject.Name.Comet);
-                ModHelper.Console.WriteLine("Changed Remote Autopilot location to the Interloper");
-            }
-
+                lockTracker.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .Comet          ).GetOWRigidbody().GetReferenceFrame());
             if (Keyboard.current.numpad8Key.wasPressedThisFrame)
-            {
-                planetaryBody = Locator.GetAstroObject(AstroObject.Name.RingWorld);
-                ModHelper.Console.WriteLine("Changed Remote Autopilot location to the <REDACTED>");
-            }
+                lockTracker.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .RingWorld      ).GetOWRigidbody().GetReferenceFrame());
         }
     }
 }
