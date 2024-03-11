@@ -39,10 +39,7 @@ namespace RemoteAutopilot
                 active = false;
             }
         }
-        public void OnAbort()
-        {
-            OnArrive(1/0f);
-        }
+        public void OnAbort() => OnArrive(1/0f);
 
         private void Update()
         {
