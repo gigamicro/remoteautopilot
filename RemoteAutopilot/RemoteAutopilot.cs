@@ -1,11 +1,11 @@
 // using OWML.Common;
-using OWML.ModHelper;
+using OWML.ModHelper;//ModBehaviour
 // using OWML.Utils;
 // using System;
 // using System.Collections;
 // using System.Diagnostics;
-using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine;//Vector3
+using UnityEngine.InputSystem;//Keyboard
 // rember ilspycmd "$(locate '*OuterWilds_Data/Managed/Assembly-CSharp.dll')" | less
 
 namespace RemoteAutopilot
