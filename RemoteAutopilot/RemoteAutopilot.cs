@@ -19,23 +19,23 @@ namespace RemoteAutopilot
         public void OnFail()
         {
             if (active)
-                shipBody.GetComponent<Autopilot>().StartMatchVelocity(lockTracker.GetReferenceFrame());
+                shipBody?.GetComponent<Autopilot>().StartMatchVelocity(lockTracker?.GetReferenceFrame());
         }
         public void OnInit()
         {
-            if (active && Vector3.Distance(shipBody.transform.position, Locator.GetPlayerTransform().position) > 10)
-                shipBody.DisableCollisionDetection();
+            if (active && Vector3.Distance((Vector3)shipBody?.transform.position, Locator.GetPlayerTransform().position) > 10)
+                shipBody?.DisableCollisionDetection();
         }
         public void OnRetro()
         {
             if (active)
-                shipBody.GetComponent<AlignShipWithReferenceFrame>().OnEnterLandingMode(lockTracker.GetReferenceFrame());
+                shipBody?.GetComponent<AlignShipWithReferenceFrame>().OnEnterLandingMode(lockTracker?.GetReferenceFrame());
         }
         public void OnArrive(float arrivalError)
         {
             if (active) {
-                shipBody.EnableCollisionDetection();
-                shipBody.GetComponent<AlignShipWithReferenceFrame>().OnExitLandingMode();
+                shipBody?.EnableCollisionDetection();
+                shipBody?.GetComponent<AlignShipWithReferenceFrame>().OnExitLandingMode();
                 active = false;
             }
         }
@@ -47,7 +47,7 @@ namespace RemoteAutopilot
                 shipBody = Locator.GetShipBody();
                 active=false;
                 if (shipBody!=null) {
-                    Autopilot ap = shipBody.GetComponent<Autopilot>();
+                    Autopilot ap = shipBody?.GetComponent<Autopilot>();
                     ap.OnAlreadyAtDestination   += OnFail;
                     ap.OnInitFlyToDestination   += OnInit;
                     ap.OnFireRetroRockets       += OnRetro;
@@ -60,59 +60,59 @@ namespace RemoteAutopilot
 
             if (Keyboard.current.numpadEnterKey.wasPressedThisFrame)
             {
-                /*if (shipBody.GetComponent<LandingPadManager>()._isLanded == true)
+                /*if (shipBody?.GetComponent<LandingPadManager>()._isLanded == true)
                 {
                     state=AutonomyState.Leaving;
                     StartCoroutine(Timing(4, AutonomyState.AutoBegin));
                 }
                 else { state=AutonomyState.AutoBegin; }*/
                 active=true;
-                shipBody.GetComponent<Autopilot>().FlyToDestination(lockTracker.GetReferenceFrame());
+                shipBody?.GetComponent<Autopilot>().FlyToDestination(lockTracker?.GetReferenceFrame());
             }
 
             /*
             if (active)
             {
-                shipBody.DisableCollisionDetection();
+                shipBody?.DisableCollisionDetection();
                 RaycastHit hit;
-                if (Physics.Raycast(shipBody.transform.position, (lockTracker.transform.position - shipBody.transform.position).normalized, out hit, 10))
+                if (Physics.Raycast(shipBody?.transform.position, (lockTracker?.transform.position - shipBody?.transform.position).normalized, out hit, 10))
                 {
-                    if (Vector3.Distance(hit.transform.position, lockTracker.transform.position) > 800)
+                    if (Vector3.Distance(hit.transform.position, lockTracker?.transform.position) > 800)
                     {
                         ModHelper.Console.WriteLine("hit:"+hit.transform.name);
                         Vector3 vec = Vector3.Cross(
-                            hit.transform.position-shipBody.transform.position,
-                            hit.transform.position-lockTracker.transform.position);
+                            hit.transform.position-shipBody?.transform.position,
+                            hit.transform.position-lockTracker?.transform.position);
                         ModHelper.Console.WriteLine("vec:"+vec);
-                        ModHelper.Console.WriteLine("fin:"+// shipBody.GetComponent<ThrusterModel>().AddTranslationalInput(
-                            shipBody.transform.InverseTransformPoint(vec
-                            +shipBody.transform.position).normalized
+                        ModHelper.Console.WriteLine("fin:"+// shipBody?.GetComponent<ThrusterModel>().AddTranslationalInput(
+                            shipBody?.transform.InverseTransformPoint(vec
+                            +shipBody?.transform.position).normalized
                         );
                     }
                 }
-                shipBody.EnableCollisionDetection();
+                shipBody?.EnableCollisionDetection();
             } //*/
 
             // if (Keyboard.current.numpadPeriodKey.wasPressedThisFrame)
-            //     lockTracker.TargetReferenceFrame(Locator.GetPlayerTransform().GetComponent<OWRigidbody>().GetReferenceFrame());
+            //     lockTracker?.TargetReferenceFrame(Locator.GetPlayerTransform().GetComponent<OWRigidbody>().GetReferenceFrame());
             if (Keyboard.current.numpad0Key.wasPressedThisFrame)
-                lockTracker.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .Sun            ).GetOWRigidbody().GetReferenceFrame());
+                lockTracker?.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .Sun            ).GetOWRigidbody().GetReferenceFrame());
             if (Keyboard.current.numpad1Key.wasPressedThisFrame)
-                lockTracker.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .TowerTwin      ).GetOWRigidbody().GetReferenceFrame());
+                lockTracker?.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .TowerTwin      ).GetOWRigidbody().GetReferenceFrame());
             if (Keyboard.current.numpad2Key.wasPressedThisFrame)
-                lockTracker.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .CaveTwin       ).GetOWRigidbody().GetReferenceFrame());
+                lockTracker?.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .CaveTwin       ).GetOWRigidbody().GetReferenceFrame());
             if (Keyboard.current.numpad3Key.wasPressedThisFrame)
-                lockTracker.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .TimberHearth   ).GetOWRigidbody().GetReferenceFrame());
+                lockTracker?.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .TimberHearth   ).GetOWRigidbody().GetReferenceFrame());
             if (Keyboard.current.numpad4Key.wasPressedThisFrame)
-                lockTracker.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .BrittleHollow  ).GetOWRigidbody().GetReferenceFrame());
+                lockTracker?.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .BrittleHollow  ).GetOWRigidbody().GetReferenceFrame());
             if (Keyboard.current.numpad5Key.wasPressedThisFrame)
-                lockTracker.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .GiantsDeep     ).GetOWRigidbody().GetReferenceFrame());
+                lockTracker?.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .GiantsDeep     ).GetOWRigidbody().GetReferenceFrame());
             if (Keyboard.current.numpad6Key.wasPressedThisFrame)
-                lockTracker.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .DarkBramble    ).GetOWRigidbody().GetReferenceFrame());
+                lockTracker?.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .DarkBramble    ).GetOWRigidbody().GetReferenceFrame());
             if (Keyboard.current.numpad7Key.wasPressedThisFrame)
-                lockTracker.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .Comet          ).GetOWRigidbody().GetReferenceFrame());
+                lockTracker?.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .Comet          ).GetOWRigidbody().GetReferenceFrame());
             if (Keyboard.current.numpad8Key.wasPressedThisFrame)
-                lockTracker.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .RingWorld      ).GetOWRigidbody().GetReferenceFrame());
+                lockTracker?.TargetReferenceFrame(Locator.GetAstroObject(AstroObject.Name    .RingWorld      ).GetOWRigidbody().GetReferenceFrame());
         }
     }
 }
