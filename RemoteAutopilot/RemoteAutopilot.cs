@@ -1,4 +1,4 @@
-// using OWML.Common;
+using OWML.Common;//IModConfig
 using OWML.ModHelper;//ModBehaviour
 // using OWML.Utils;
 // using System;
@@ -12,6 +12,15 @@ namespace RemoteAutopilot
 {
     public class RemoteAutopilot : ModBehaviour
     {
+        bool doAlignment;
+        bool doCollisionDisable;
+
+        public override void Configure(IModConfig config)
+        {
+            doAlignment = config.GetSettingsValue<bool>("Align landing gear down while decelerating");
+            doCollisionDisable = config.GetSettingsValue<bool>("Disable collision en route");
+        }
+
         private ReferenceFrameTracker lockTracker = null;
         private OWRigidbody shipBody = null;
         bool active = false;
@@ -23,12 +32,12 @@ namespace RemoteAutopilot
         }
         public void OnInit()
         {
-            if (active && Vector3.Distance((Vector3)shipBody?.transform.position, Locator.GetPlayerTransform().position) > 10)
+            if (active && doCollisionDisable && Vector3.Distance((Vector3)shipBody?.transform.position, Locator.GetPlayerTransform().position) > 10)
                 shipBody?.DisableCollisionDetection();
         }
         public void OnRetro()
         {
-            if (active)
+            if (active && doAlignment)
                 shipBody?.GetComponent<AlignShipWithReferenceFrame>().OnEnterLandingMode(lockTracker?.GetReferenceFrame());
         }
         public void OnArrive(float arrivalError)

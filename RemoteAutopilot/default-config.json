@@ -1,3 +1,7 @@
 {
-  "enabled": true
+  "enabled": true,
+  "settings": {
+    "Align landing gear down while decelerating": true,
+    "Disable collision en route": true
+  }
 }
